@@ -1,103 +1,202 @@
-import Image from "next/image";
+import { Metadata } from 'next';
+import Image from 'next/image';
+export const metadata: Metadata = {
+  title: 'IELTS Course - Product Page',
+  description: 'Explore the IELTS Course product details, description, and media.',
+};
+export default async function Product() {
+  const res = await fetch('https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course?lang=en', {
+    headers: {
+      "X-TENMS-SOURCE-PLATFORM": "web"
+    }
+  });
+  const productData = await res.json();
+  const heroStyle = {
+    backgroundImage: `url("https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg")`,
+    width: '100vw',
+    height: "300px"
+  }
+  type Section = {
+    type: string;
+    name: string;
+    values: any[];
+  };
 
-export default function Home() {
+  type Instructor = {
+    image: string;
+    type: string;
+    name: string;
+    description: string;
+  };
+
+  type Feature = {
+    id: string | number;
+    icon: string;
+    type: string;
+    title: string;
+    subtitle: string;
+  };
+
+  type Pointer = {
+    id: string | number;
+    text: string;
+    type: string;
+
+
+  };
+
+  type FeatureExplanation = {
+    id: string | number;
+    title: string;
+    checklist: string[];
+    file_url: string;
+  };
+
+  type CourseDetail = {
+    id: string | number;
+    title: string;
+    description: string;
+    type: string;
+
+  };
+
+  type ProductData = {
+    data: {
+      title: string;
+      description: string;
+      media: { thumbnail_url: string }[];
+      cta_text: { name: string };
+      checklist: { id: string | number; icon: string; text: string; color: string; list_page_visibility: boolean }[];
+      sections: Section[];
+    };
+  };
+
+  const typedProductData = productData as ProductData;
+
+  const instructor = productData.data.sections.find((x: Instructor) => x.type === "instructors");
+  const features = productData.data.sections.find((x: Feature) => x.type === "features");
+  const pointers = productData.data.sections.find((x: Pointer) => x.type === "pointers");
+  const feature_explanations = productData.data.sections.find((x: any) => x.type === "feature_explanations");
+  const courseDetails = productData.data.sections.find((x: CourseDetail) => x.type === "about");
+
+
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+      <main className="flex flex-col  bg-amber-50 h-lvh">
+        <div className="hero-section" style={heroStyle}>
+          <div className="container mx-auto flex flex-col gap-2">
+            <h1 className="text-white text-[21px] font-semibold  md:text-4xl">{productData.data.title}</h1>
+            <a href="#" className='flex gap-1.5'>
+              <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" alt="" /> (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
+            </a>
+            <p className="text-gray-400 " dangerouslySetInnerHTML={{ __html: productData.data.description }} />
+          </div>
         </div>
+        <div className="container flex">
+
+          <div className="flex-2 md:max-w-[calc(100%_-_348px)] lg:max-w-[calc(100%_-_448px)]">
+            <span className="mb-4 text-xl font-semibold md:text-2xl">Course instructor</span>
+            <section className='instructor-card'>
+              <div className="image-wrapper">
+                <Image src={instructor.values[0]?.image} alt="" />
+              </div>
+              <div className="info-wrapper">
+                <a className="name" href='#'>{instructor.values[0]?.name} </a>
+                <p className="text-gray-400 " dangerouslySetInnerHTML={{ __html: instructor.values[0].description }} />
+
+              </div>
+
+            </section>
+            <span className="mb-4 text-xl font-semibold md:text-2xl">{features.name}</span>
+
+            <section className='feature-wrapper'>
+              {features.values.map((x: Feature) => (
+                <div className="single-feature" key={x.id}>
+                  <span className="icon-wrapper">
+                    <Image src={x.icon} alt="" />
+                  </span>
+                  <div className="info-wrapper">
+                    <span className="title">{x.title}</span>
+                    <p>{x.subtitle}</p>
+                  </div>
+                </div>
+              ))}
+
+            </section>
+            <span className="mb-4 text-xl font-semibold md:text-2xl">{pointers.name}</span>
+
+            <section className='feature-wrapper'>
+              {pointers.values.map((x: Pointer) => (
+                <div className="single-feature" key={x.id}>
+                  <span className="icon-wrapper">
+                    ✔️
+                  </span>
+                  <div className="info-wrapper">
+                    <p>{x.text}</p>
+                  </div>
+                </div>
+              ))}
+
+            </section>
+            <span className="mb-4 text-xl font-semibold md:text-2xl">{feature_explanations.name}</span>
+
+            <section className='feature-wrapper grid grid-cols-1 px-5 border divide-y rounded-md '>
+              {feature_explanations.values.map((x: FeatureExplanation) => (
+                <div className="flex flex-col items-start justify-between gap-3 py-5 md:flex-row" key={x.id}>
+                  <div className="info-wrapper flex flex-col gap-2">
+                    <span className="title">{x.title}</span>
+                    {
+                      x.checklist.map((c: string, inx: number) => (
+                        <span key={inx}>✔️{c}</span>
+                      ))
+                    }
+                  </div>
+                  <div className='mb-4 mx-auto max-w-[350px] transition-opacity duration-300 ease-in-out'>
+
+                    <Image loading='lazy' height={250} width={200} src={x.file_url} alt="" />
+                  </div>
+
+                </div>
+              ))}
+
+            </section>
+            <span className="mb-4 text-xl font-semibold md:text-2xl">{courseDetails.name}</span>
+
+            <section className='feature-wrapper'>
+              {courseDetails.values.map((x: CourseDetail, index: number) => (
+                <div className="single-feature" key={x.id}>
+                  <span dangerouslySetInnerHTML={{ __html: x.title }} />
+                  <p className="text-gray-400 " dangerouslySetInnerHTML={{ __html: x.description }} />
+
+                </div>
+              ))}
+
+            </section>
+          </div>
+          <div className="sidebar flex flex-col  flex-1 ">
+            <div className="video-trailer">
+              <Image src={productData.data.media[0].thumbnail_url} alt="" />
+            </div>
+            <button className="cta">{productData.data?.cta_text.name}</button>
+            <span className="title">এই কোর্সে যা থাকছে</span>
+            <div className="check-list flex flex-col gap-2">
+              {
+                productData.data?.checklist.map((check: any) =>
+                  check.list_page_visibility ? (
+                    <div className="single-check flex gap-2" key={check.id} style={{ color: check.color }}>
+                      <Image src={check.icon} alt="" width={24} height={24} />
+                      <span className="text">{check.text}</span>
+                    </div>
+                  ) : null
+                )
+              }
+            </div>
+          </div>
+        </div>
+
+
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    </>
+  )
 }
