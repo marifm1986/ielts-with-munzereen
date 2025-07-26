@@ -1,4 +1,5 @@
 
+import { Camera, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import React, { useRef, useState } from 'react';
@@ -17,7 +18,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const title = seo.title || 'IELTS Course - Product Page';
   const description = seo.description || 'Explore the IELTS Course details and features.';
 
-  // Extract Open Graph image from defaultMeta
   const ogImage = seo.defaultMeta?.find((m: any) => m.value === 'og:image')?.content;
   const ogUrl = seo.defaultMeta?.find((m: any) => m.value === 'og:url')?.content;
 
@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description,
       images: ogImage ? [ogImage] : [],
     },
-    // You can optionally embed structured data using other methods if needed
+
   };
 }
 
@@ -48,7 +48,7 @@ export interface Data {
   id: number;
   title: string;
   description: string;
-  media: { thumbnail_url: string }[]; // Fixed
+  media: { thumbnail_url: string }[];
   checklist: {
     id?: string | number;
     text: string;
@@ -57,7 +57,7 @@ export interface Data {
     list_page_visibility: boolean;
   }[];
   seo: any;
-  cta_text: { name: string }; // Fixed
+  cta_text: { name: string };
   sections: any[];
 }
 
@@ -85,9 +85,9 @@ export default async function Product() {
   const courseDetails = typedProductData.sections.find((x: any) => x.type === "about");
 
   return (
-    <main className="flex  bg-gray-100 h-lvh">
-      <div className="container flex text-black mx-auto p-6 gap-8">
-        <div className="main-content flex-2/3 flex flex-col gap-8">
+    <main className="flex flex-col bg-gray-100">
+      <div className="container flex max-md:flex-col text-black mx-auto p-6 gap-8 relative">
+        <div className="main-content bg-gray-100 flex-2/3 flex flex-col gap-8">
           <div className="hero-section flex flex-col gap-4">
             <h1 className="text-[21px] font-semibold md:text-4xl">{typedProductData.title}</h1>
             <a href="#" className='flex gap-1.5'>
@@ -105,7 +105,10 @@ export default async function Product() {
                   <Image src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={80} height={100} />
                 </div>
                 <div className="info-wrapper w-full">
-                  <a className="name" href='#'>{instructor.values[0]?.name}</a>
+                  <a className="flex text-2xl font-bold items-center gap-2" href='#'>{instructor.values[0]?.name}
+                    <ChevronRight />
+
+                  </a>
                   <p className="flex w-full" dangerouslySetInnerHTML={{ __html: instructor.values[0]?.description }} />
                 </div>
               </section>
@@ -134,8 +137,8 @@ export default async function Product() {
 
           {/* Pointers */}
           {pointers && (
-            <>
-              <span className="mb-4 text-xl font-semibold md:text-2xl">{pointers.name}</span>
+            <div className='pointers bg-blue-50 flex flex-col p-4 rounded-2xl '>
+              <span className=" mb-4 text-xl font-semibold md:text-2xl">{pointers.name}</span>
               <section className='feature-wrapper'>
                 {pointers.values.map((x: any) => (
                   <div className="single-feature" key={x.id}>
@@ -146,12 +149,12 @@ export default async function Product() {
                   </div>
                 ))}
               </section>
-            </>
+            </div>
           )}
 
           {/* Feature Explanations */}
           {feature_explanations && (
-            <>
+            <div className='feature bg-amber-50 flex flex-col'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">{feature_explanations.name}</span>
               <section className='feature-wrapper grid grid-cols-1 px-5 border divide-y rounded-md'>
                 {feature_explanations.values.map((x: any) => (
@@ -168,7 +171,7 @@ export default async function Product() {
                   </div>
                 ))}
               </section>
-            </>
+            </div>
           )}
 
           {/* Course Details */}
@@ -187,7 +190,7 @@ export default async function Product() {
           )}
         </div>
         {/* Sidebar */}
-        <div className="sidebar flex flex-col flex-1/3 ">
+        <div className="sidebar flex flex-col flex-1/3 sticky w-[20rem] top-0">
           <div className="video-trailer flex flex-col shadow-2xl rounded-2xl overflow-clip gap-4">
             <Image
               className='w-full'
@@ -216,7 +219,6 @@ export default async function Product() {
               check.list_page_visibility ? (
                 <div className="single-check flex gap-2" key={check.id || index} style={{ color: check.color }}>
                   <Image src={check.icon} alt={check.text} width={24} height={24} />
-
                   <span className="text">{check.text}</span>
                 </div>
               ) : null
