@@ -7,11 +7,13 @@ export async function generateMetadata(): Promise<Metadata> {
     headers: {
       'X-TENMS-SOURCE-PLATFORM': 'web',
     },
-    next: { revalidate: 60 }, // safe for export builds
+    next: { revalidate: 60 }, // Needed for static export
   });
 
   const productData = await res.json();
   const seo = productData?.data?.seo || {};
+
+  const metaImageUrl = seo.metaImage || 'https://cdn.10minuteschool.com/default-og.jpg'; // optional fallback
 
   return {
     title: seo.metaTitle || 'IELTS Course - Product Page',
@@ -19,13 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: seo.metaTitle,
       description: seo.metaDescription,
-      images: seo.metaImage ? [{ url: seo.metaImage }] : [],
+      images: metaImageUrl ? [{ url: metaImageUrl }] : [],
     },
     twitter: {
+      card: 'summary_large_image',
       title: seo.metaTitle,
       description: seo.metaDescription,
-      card: 'summary_large_image',
-      images: seo.metaImage ? [seo.metaImage] : [],
+      images: metaImageUrl ? [metaImageUrl] : [],
     },
   };
 }
