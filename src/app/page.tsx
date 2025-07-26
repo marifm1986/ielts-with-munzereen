@@ -7,30 +7,39 @@ export async function generateMetadata(): Promise<Metadata> {
     headers: {
       'X-TENMS-SOURCE-PLATFORM': 'web',
     },
-    next: { revalidate: 60 }, // Needed for static export
+    next: { revalidate: 60 },
   });
 
   const productData = await res.json();
   const seo = productData?.data?.seo || {};
 
-  const metaImageUrl = seo.metaImage || 'https://cdn.10minuteschool.com/default-og.jpg'; // optional fallback
+  const title = seo.title || 'IELTS Course - Product Page';
+  const description = seo.description || 'Explore the IELTS Course details and features.';
+
+  // Extract Open Graph image from defaultMeta
+  const ogImage = seo.defaultMeta?.find((m: any) => m.value === 'og:image')?.content;
+  const ogUrl = seo.defaultMeta?.find((m: any) => m.value === 'og:url')?.content;
 
   return {
-    title: seo.metaTitle || 'IELTS Course - Product Page',
-    description: seo.metaDescription || 'Explore the IELTS Course product details, description, and media.',
+    title,
+    description,
+    keywords: seo.keywords || [],
     openGraph: {
-      title: seo.metaTitle,
-      description: seo.metaDescription,
-      images: metaImageUrl ? [{ url: metaImageUrl }] : [],
+      title,
+      description,
+      url: ogUrl,
+      images: ogImage ? [{ url: ogImage, alt: title }] : [],
     },
     twitter: {
       card: 'summary_large_image',
-      title: seo.metaTitle,
-      description: seo.metaDescription,
-      images: metaImageUrl ? [metaImageUrl] : [],
+      title,
+      description,
+      images: ogImage ? [ogImage] : [],
     },
+    // You can optionally embed structured data using other methods if needed
   };
 }
+
 
 
 export interface Data {
