@@ -1,6 +1,7 @@
 
 import Image from 'next/image';
 import { Metadata } from 'next';
+import React, { useRef, useState } from 'react';
 
 export async function generateMetadata(): Promise<Metadata> {
   const res = await fetch('https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course?lang=en', {
