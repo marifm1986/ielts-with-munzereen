@@ -104,7 +104,7 @@ export default async function Product() {
       <div className="container flex max-md:flex-col text-black mx-auto p-6 gap-8 relative">
         <div className="main-content bg-gray-100 flex-2/3 flex flex-col gap-8  max-sm:order-2">
           <div className="hero-section flex flex-col gap-4">
-            <h1 className="text-[21px] font-semibold md:text-4xl">{typedProductData.title}</h1>
+            <h1 className="text-[21px] font-semibold md:text-4xl text-purple-800">{typedProductData.title}</h1>
             <a href="#" className='flex gap-1.5 max-sm:flex-col'>
               <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
@@ -115,12 +115,12 @@ export default async function Product() {
           {instructor && (
             <div className='instructor-wrapper flex flex-col gap-1 w-full'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">Course instructor</span>
-              <Card className='instructor-card flex flex-row max-sm:flex-col gap-4 items-center border-red-500 w-full bg-white p-4 '>
+              <Card className='instructor-card flex flex-row max-sm:flex-col gap-4 items-center border-purple-800 w-full bg-white p-4 '>
                 <div className="image-wrapper overflow-hidden">
                   <Image className="rounded-xl" loading='lazy' src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={120} height={150} />
                 </div>
                 <div className="info-wrapper w-full">
-                  <a className="flex text-2xl font-bold items-center text-red-500 gap-2" href='#'>{instructor.values[0]?.name}
+                  <a className="flex text-2xl font-bold items-center text-purple-800 gap-2" href='#'>{instructor.values[0]?.name}
                     <ChevronRight />
                   </a>
                   <p className="flex w-full" dangerouslySetInnerHTML={{ __html: instructor.values[0]?.description }} />
@@ -165,12 +165,12 @@ export default async function Product() {
 
           {/* Feature Explanations */}
           {feature_explanations && (
-            <div className='feature flex flex-col p-4'>
+            <div className='feature flex flex-col'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">{feature_explanations.name}</span>
-              <section className='feature-wrapper grid grid-cols-1 border divide-y divide-gray-300 border-gray-300 rounded-md p-2'>
+              <section className='feature-wrapper grid grid-cols-1 border divide-y divide-gray-300 border-gray-300 rounded-md'>
                 {feature_explanations.values.map((x: any) => (
-                  <div className="flex items-center justify-between gap-4 p-4  max-sm:flex-col" key={x.id}>
-                    <div className="info-wrapper flex flex-col gap-2">
+                  <div className="flex items-start justify-between gap-4 p-4  max-sm:flex-col" key={x.id}>
+                    <div className="info-wrapper flex flex-col gap-2 max-sm:order-2">
                       <span className="title text-lg font-black">{x.title}</span>
                       {x.checklist.map((c: string, inx: number) => (
                         <span key={inx} className='flex items-center gap-4'>
@@ -178,8 +178,8 @@ export default async function Product() {
                           {c}</span>
                       ))}
                     </div>
-                    <div className='mb-4 mx-left max-w-[350px] max-sm:w-full '>
-                      <Image src={x.file_url} alt={x.title || "Feature"} loading='lazy' className='max-sm:w-full rounded-xl' width={200} height={250} />
+                    <div className='mx-left max-w-[350px] max-sm:w-full max-sm:order-1 '>
+                      <Image src={x.file_url} alt={x.title || "Feature"} loading='lazy' className='max-sm:w-full rounded-lg max-sm:rounded-b-none' width={200} height={250} />
                     </div>
                   </div>
                 ))}
@@ -196,7 +196,7 @@ export default async function Product() {
                 <Accordion type="single" collapsible>
 
                   {courseDetails.values.map((x: any) => (
-                    <AccordionItem value="item-1" key={x.id}>
+                    <AccordionItem value={x.id} key={x.id}>
                       <AccordionTrigger className='cursor-pointer'>
                         <span dangerouslySetInnerHTML={{ __html: x.title }} />
                       </AccordionTrigger>
