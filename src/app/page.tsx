@@ -109,7 +109,7 @@ export default async function Product() {
               <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
             </a>
-            <p className="" dangerouslySetInnerHTML={{ __html: typedProductData.description }} />
+            <div dangerouslySetInnerHTML={{ __html: typedProductData.description }} />
           </div>
           {/* Instructor */}
           {instructor && (
@@ -123,7 +123,7 @@ export default async function Product() {
                   <a className="flex text-2xl font-bold items-center text-purple-800 gap-2" href='#'>{instructor.values[0]?.name}
                     <ChevronRight />
                   </a>
-                  <p className="flex w-full" dangerouslySetInnerHTML={{ __html: instructor.values[0]?.description }} />
+                  <div className="flex w-full" dangerouslySetInnerHTML={{ __html: instructor.values[0]?.description }} />
                 </div>
               </Card>
             </div>
@@ -198,17 +198,14 @@ export default async function Product() {
                   {courseDetails.values.map((x: any) => (
                     <AccordionItem value={x.id} key={x.id}>
                       <AccordionTrigger className='cursor-pointer'>
-                        <span dangerouslySetInnerHTML={{ __html: x.title }} />
+                        <div dangerouslySetInnerHTML={{ __html: x.title }} />
                       </AccordionTrigger>
                       <AccordionContent>
-                        <span dangerouslySetInnerHTML={{ __html: x.description }} />
+                        <div dangerouslySetInnerHTML={{ __html: x.description }} />
                       </AccordionContent>
                     </AccordionItem>
 
-                    // <div className="single-feature flex flex-col gap-4 mb-4">
-                    //   <span className="flex flex-col gap-2" dangerouslySetInnerHTML={{ __html: x.title }} />
-                    //   <p className="flex flex-col gap-2" dangerouslySetInnerHTML={{ __html: x.description }} />
-                    // </div>
+
                   ))}
 
                 </Accordion>
