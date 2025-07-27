@@ -1,8 +1,8 @@
-
-import { Camera, ChevronRight } from 'lucide-react';
+import { Camera, Check, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import React, { useRef, useState } from 'react';
+import ProductClient from '@/components/ui/productClient';
 
 export async function generateMetadata(): Promise<Metadata> {
   const res = await fetch('https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course?lang=en', {
@@ -48,7 +48,7 @@ export interface Data {
   id: number;
   title: string;
   description: string;
-  media: { thumbnail_url: string }[];
+  media: [];
   checklist: {
     id?: string | number;
     text: string;
@@ -83,7 +83,6 @@ export default async function Product() {
   const pointers = typedProductData.sections.find((x: any) => x.type === "pointers");
   const feature_explanations = typedProductData.sections.find((x: any) => x.type === "feature_explanations");
   const courseDetails = typedProductData.sections.find((x: any) => x.type === "about");
-
   return (
     <main className="flex flex-col bg-gray-100">
       <div className="container flex max-md:flex-col text-black mx-auto p-6 gap-8 relative">
@@ -91,7 +90,7 @@ export default async function Product() {
           <div className="hero-section flex flex-col gap-4">
             <h1 className="text-[21px] font-semibold md:text-4xl">{typedProductData.title}</h1>
             <a href="#" className='flex gap-1.5'>
-              <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" alt="Rating badge" width={100} height={100} />
+              <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
             </a>
             <p className="" dangerouslySetInnerHTML={{ __html: typedProductData.description }} />
@@ -102,7 +101,7 @@ export default async function Product() {
               <span className="mb-4 text-xl font-semibold md:text-2xl">Course instructor</span>
               <section className='instructor-card flex gap-4 items-center w-full bg-gray-200 p-4 rounded-md overflow-hidden'>
                 <div className="image-wrapper overflow-hidden">
-                  <Image src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={80} height={100} />
+                  <Image loading='lazy' src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={80} height={100} />
                 </div>
                 <div className="info-wrapper w-full">
                   <a className="flex text-2xl font-bold items-center gap-2" href='#'>{instructor.values[0]?.name}
@@ -123,7 +122,7 @@ export default async function Product() {
                 {features.values.map((x: any) => (
                   <div className="single-feature gap-4 flex" key={x.id}>
                     <div className="icon-wrapper">
-                      <Image className='object-contain object-center min-w-8' src={x.icon} alt="Feature icon" width={24} height={100} />
+                      <Image className='object-contain object-center min-w-8' loading='lazy' src={x.icon} alt="Feature icon" width={24} height={100} />
                     </div>
                     <div className="info-wrapper">
                       <span className="title text-xl font-bold">{x.title}</span>
@@ -141,11 +140,9 @@ export default async function Product() {
               <span className=" mb-4 text-xl font-semibold md:text-2xl">{pointers.name}</span>
               <section className='feature-wrapper'>
                 {pointers.values.map((x: any) => (
-                  <div className="single-feature" key={x.id}>
-                    <span className="icon-wrapper">✔️</span>
-                    <div className="info-wrapper">
-                      <p>{x.text}</p>
-                    </div>
+                  <div className="single-feature flex items-center gap-4" key={x.id}>
+                    <Check className='w-4' />
+                    <p>{x.text}</p>
                   </div>
                 ))}
               </section>
@@ -166,7 +163,7 @@ export default async function Product() {
                       ))}
                     </div>
                     <div className='mb-4 mx-auto max-w-[350px]'>
-                      <Image src={x.file_url} alt={x.title || "Feature"} width={200} height={250} />
+                      <Image src={x.file_url} alt={x.title || "Feature"} loading='lazy' width={200} height={250} />
                     </div>
                   </div>
                 ))}
@@ -191,34 +188,17 @@ export default async function Product() {
         </div>
         {/* Sidebar */}
         <div className="sidebar flex flex-col flex-1/3 sticky w-[20rem] top-0">
-          <div className="video-trailer flex flex-col shadow-2xl rounded-2xl overflow-clip gap-4">
-            <Image
-              className='w-full'
-              src={typedProductData.media[0]?.thumbnail_url || "/fallback.jpg"}
-              alt="Video thumbnail"
-              width={400}
-              height={250}
-            />
-            <div className="image-gallery flex gap-4 items-center overflow-auto">
-              {
-                typedProductData.media.map((x, id) => (
-                  x.thumbnail_url ? (
-                    <Image className='flex-1' src={x?.thumbnail_url} alt={x.thumbnail_url} width={100} height={100} key={id} />
-                  ) : null
-
-
-                ))
-              }
-            </div>
-            <span className="price text-3xl font-bold p-4">৳1,000</span>
-            <button className="cta bg-green-600 text-white p-4">{typedProductData.cta_text?.name}</button>
-          </div>
+          <ProductClient
+            media={typedProductData.media}
+            ctaText={typedProductData.cta_text?.name}
+            checklist={typedProductData.checklist}
+          />
           <span className="title">এই কোর্সে যা থাকছে</span>
           <div className="check-list flex flex-col gap-2">
             {typedProductData.checklist.map((check, index) =>
               check.list_page_visibility ? (
                 <div className="single-check flex gap-2" key={check.id || index} style={{ color: check.color }}>
-                  <Image src={check.icon} alt={check.text} width={24} height={24} />
+                  <Image src={check.icon} alt={check.text} width={24} height={24} loading='lazy' />
                   <span className="text">{check.text}</span>
                 </div>
               ) : null
