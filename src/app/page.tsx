@@ -1,24 +1,16 @@
-import { Camera, Check, ChevronRight, Circle, CircleArrowRight } from 'lucide-react';
-import Image from 'next/image';
-import { Metadata } from 'next';
-import React, { useRef, useState } from 'react';
-import ProductClient from '@/components/ui/productClient';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
+import {
+  Card
+} from "@/components/ui/card";
+import ProductClient from '@/components/ui/productClient';
+import { Check, ChevronRight, CircleArrowRight } from 'lucide-react';
+import { Metadata } from 'next';
+import Image from 'next/image';
 
 export async function generateMetadata(): Promise<Metadata> {
   const res = await fetch('https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course?lang=en', {
@@ -87,13 +79,6 @@ export default async function Product() {
 
   const productData = await res.json();
   const typedProductData = productData.data as Data;
-  console.log(typedProductData)
-  const heroStyle = {
-    backgroundImage: `url("https://cdn.10minuteschool.com/images/ui_%281%29_1716445506383.jpeg")`,
-    width: '100vw',
-    height: "300px"
-  };
-
   const instructor = typedProductData.sections.find((x: any) => x.type === "instructors");
   const features = typedProductData.sections.find((x: any) => x.type === "features");
   const pointers = typedProductData.sections.find((x: any) => x.type === "pointers");
@@ -103,9 +88,9 @@ export default async function Product() {
     <main className="flex flex-col bg-gray-100">
       <div className="container flex max-md:flex-col text-black mx-auto p-6 gap-8 relative">
         <div className="main-content bg-gray-100 flex-2/3 flex flex-col gap-8  max-sm:order-2">
-          <div className="hero-section flex flex-col gap-4">
-            <h1 className="text-[21px] font-semibold md:text-4xl text-purple-800">{typedProductData.title}</h1>
-            <a href="#" className='flex gap-1.5 max-sm:flex-col'>
+          <div className="hero-section flex flex-col gap-4 p-4 ">
+            <h1 className="text-[21px] font-bold md:text-4xl text-purple-800">{typedProductData.title}</h1>
+            <a href="#" className='flex gap-1.5 font-black max-sm:flex-col'>
               <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
             </a>
@@ -155,7 +140,7 @@ export default async function Product() {
               <section className='feature-wrapper grid grid-cols-2 max-sm:grid-cols-1 gap-4'>
                 {pointers.values.map((x: any) => (
                   <div className="single-feature flex items-start gap-4" key={x.id}>
-                    <CircleArrowRight className='min-w-[18px] shrink-0 text-green-800' />
+                    <CircleArrowRight className='min-w-[18px] shrink-0 text-purple-800' />
                     <p>{x.text}</p>
                   </div>
                 ))}
@@ -174,7 +159,7 @@ export default async function Product() {
                       <span className="title text-lg font-black">{x.title}</span>
                       {x.checklist.map((c: string, inx: number) => (
                         <span key={inx} className='flex items-center gap-4'>
-                          <Check className='min-w-[18px] shrink-0' />
+                          <Check className='min-w-[18px] shrink-0 text-purple-800' />
                           {c}</span>
                       ))}
                     </div>

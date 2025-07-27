@@ -41,7 +41,7 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
         setStartX(e.pageX - (scrollRef.current?.offsetLeft ?? 0));
         setScrollLeft(scrollRef.current?.scrollLeft ?? 0);
     };
-
+    console.log('selectedMedia', selectedMedia)
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!isDragging || !scrollRef.current) return;
         const x = e.pageX - scrollRef.current.offsetLeft;
@@ -52,17 +52,6 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
     const handleMouseUp = () => {
         setIsDragging(false);
     };
-
-    const beforeStyle = {
-        content: "",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "red"
-
-    }
 
     return (
         <div className="sidebar flex flex-col flex-1/3 w-fit gap-4">
@@ -112,7 +101,6 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
-
                 >
                     {media.map((x, id) => (
                         x.thumbnail_url ? (
