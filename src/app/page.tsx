@@ -1,8 +1,24 @@
-import { Camera, Check, ChevronRight } from 'lucide-react';
+import { Camera, Check, ChevronRight, Circle, CircleArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import React, { useRef, useState } from 'react';
 import ProductClient from '@/components/ui/productClient';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 export async function generateMetadata(): Promise<Metadata> {
   const res = await fetch('https://api.10minuteschool.com/discovery-service/api/v1/products/ielts-course?lang=en', {
@@ -86,10 +102,10 @@ export default async function Product() {
   return (
     <main className="flex flex-col bg-gray-100">
       <div className="container flex max-md:flex-col text-black mx-auto p-6 gap-8 relative">
-        <div className="main-content bg-gray-100 flex-2/3 flex flex-col gap-8">
+        <div className="main-content bg-gray-100 flex-2/3 flex flex-col gap-8  max-sm:order-2">
           <div className="hero-section flex flex-col gap-4">
             <h1 className="text-[21px] font-semibold md:text-4xl">{typedProductData.title}</h1>
-            <a href="#" className='flex gap-1.5'>
+            <a href="#" className='flex gap-1.5 max-sm:flex-col'>
               <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
             </a>
@@ -99,26 +115,25 @@ export default async function Product() {
           {instructor && (
             <div className='instructor-wrapper flex flex-col gap-1 w-full'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">Course instructor</span>
-              <section className='instructor-card flex gap-4 items-center w-full bg-gray-200 p-4 rounded-md overflow-hidden'>
+              <Card className='instructor-card flex flex-row max-sm:flex-col gap-4 items-center border-red-500 w-full bg-white p-4 '>
                 <div className="image-wrapper overflow-hidden">
-                  <Image loading='lazy' src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={80} height={100} />
+                  <Image className="rounded-xl" loading='lazy' src={instructor.values[0]?.image} alt={instructor.values[0]?.name || "Instructor"} width={120} height={150} />
                 </div>
                 <div className="info-wrapper w-full">
-                  <a className="flex text-2xl font-bold items-center gap-2" href='#'>{instructor.values[0]?.name}
+                  <a className="flex text-2xl font-bold items-center text-red-500 gap-2" href='#'>{instructor.values[0]?.name}
                     <ChevronRight />
-
                   </a>
                   <p className="flex w-full" dangerouslySetInnerHTML={{ __html: instructor.values[0]?.description }} />
                 </div>
-              </section>
+              </Card>
             </div>
           )}
 
           {/* Features */}
           {features && (
-            <div className='features-wrapper flex flex-col bg-white border-2 border-gray-200 gap-4 p-6 rounded-xl'>
+            <div className='features-wrapper flex flex-col bg-white  gap-4 p-6 rounded-xl'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">{features.name}</span>
-              <section className='feature-wrapper grid grid-cols-2 gap-4'>
+              <section className='feature-wrapper grid grid-cols-2  gap-4 max-sm:grid-cols-1'>
                 {features.values.map((x: any) => (
                   <div className="single-feature gap-4 flex" key={x.id}>
                     <div className="icon-wrapper">
@@ -133,15 +148,14 @@ export default async function Product() {
               </section>
             </div>
           )}
-
           {/* Pointers */}
           {pointers && (
-            <div className='pointers bg-blue-50 flex flex-col p-4 rounded-2xl '>
+            <div className='pointers bg-white flex flex-col p-4 rounded-2xl  '>
               <span className=" mb-4 text-xl font-semibold md:text-2xl">{pointers.name}</span>
-              <section className='feature-wrapper'>
+              <section className='feature-wrapper grid grid-cols-2 max-sm:grid-cols-1 gap-4'>
                 {pointers.values.map((x: any) => (
-                  <div className="single-feature flex items-center gap-4" key={x.id}>
-                    <Check className='w-4' />
+                  <div className="single-feature flex items-start gap-4" key={x.id}>
+                    <CircleArrowRight className='min-w-[18px] shrink-0 text-green-800' />
                     <p>{x.text}</p>
                   </div>
                 ))}
@@ -151,19 +165,21 @@ export default async function Product() {
 
           {/* Feature Explanations */}
           {feature_explanations && (
-            <div className='feature bg-amber-50 flex flex-col'>
+            <div className='feature flex flex-col p-4'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">{feature_explanations.name}</span>
-              <section className='feature-wrapper grid grid-cols-1 px-5 border divide-y rounded-md'>
+              <section className='feature-wrapper grid grid-cols-1 border divide-y divide-gray-300 border-gray-300 rounded-md p-2'>
                 {feature_explanations.values.map((x: any) => (
-                  <div className="flex flex-col items-start justify-between gap-3 py-5 md:flex-row" key={x.id}>
+                  <div className="flex items-center justify-between gap-4 p-4  max-sm:flex-col" key={x.id}>
                     <div className="info-wrapper flex flex-col gap-2">
-                      <span className="title">{x.title}</span>
+                      <span className="title text-lg font-black">{x.title}</span>
                       {x.checklist.map((c: string, inx: number) => (
-                        <span key={inx}>✔️ {c}</span>
+                        <span key={inx} className='flex items-center gap-4'>
+                          <Check className='min-w-[18px] shrink-0' />
+                          {c}</span>
                       ))}
                     </div>
-                    <div className='mb-4 mx-auto max-w-[350px]'>
-                      <Image src={x.file_url} alt={x.title || "Feature"} loading='lazy' width={200} height={250} />
+                    <div className='mb-4 mx-left max-w-[350px] max-sm:w-full '>
+                      <Image src={x.file_url} alt={x.title || "Feature"} loading='lazy' className='max-sm:w-full rounded-xl' width={200} height={250} />
                     </div>
                   </div>
                 ))}
@@ -172,38 +188,42 @@ export default async function Product() {
           )}
 
           {/* Course Details */}
+
           {courseDetails && (
-            <>
+            <div className='p-4 flex flex-col gap-4'>
               <span className="mb-4 text-xl font-semibold md:text-2xl">{courseDetails.name}</span>
-              <section className='feature-wrapper'>
-                {courseDetails.values.map((x: any) => (
-                  <div className="single-feature" key={x.id}>
-                    <span dangerouslySetInnerHTML={{ __html: x.title }} />
-                    <p className="" dangerouslySetInnerHTML={{ __html: x.description }} />
-                  </div>
-                ))}
+              <section className='feature-wrapper '>
+                <Accordion type="single" collapsible>
+
+                  {courseDetails.values.map((x: any) => (
+                    <AccordionItem value="item-1" key={x.id}>
+                      <AccordionTrigger className='cursor-pointer'>
+                        <span dangerouslySetInnerHTML={{ __html: x.title }} />
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <span dangerouslySetInnerHTML={{ __html: x.description }} />
+                      </AccordionContent>
+                    </AccordionItem>
+
+                    // <div className="single-feature flex flex-col gap-4 mb-4">
+                    //   <span className="flex flex-col gap-2" dangerouslySetInnerHTML={{ __html: x.title }} />
+                    //   <p className="flex flex-col gap-2" dangerouslySetInnerHTML={{ __html: x.description }} />
+                    // </div>
+                  ))}
+
+                </Accordion>
               </section>
-            </>
+            </div>
           )}
         </div>
         {/* Sidebar */}
-        <div className="sidebar flex flex-col flex-1/3 sticky w-[20rem] top-0">
+        <div className="sidebar flex flex-col flex-1/3 max-sm:order-1">
           <ProductClient
             media={typedProductData.media}
             ctaText={typedProductData.cta_text?.name}
             checklist={typedProductData.checklist}
           />
-          <span className="title">এই কোর্সে যা থাকছে</span>
-          <div className="check-list flex flex-col gap-2">
-            {typedProductData.checklist.map((check, index) =>
-              check.list_page_visibility ? (
-                <div className="single-check flex gap-2" key={check.id || index} style={{ color: check.color }}>
-                  <Image src={check.icon} alt={check.text} width={24} height={24} loading='lazy' />
-                  <span className="text">{check.text}</span>
-                </div>
-              ) : null
-            )}
-          </div>
+
         </div>
       </div>
 

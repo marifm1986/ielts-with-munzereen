@@ -1,7 +1,9 @@
 'use client';
 
+import { CirclePlay } from 'lucide-react';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
+import { Card } from './card';
 
 interface Media {
     name: string;
@@ -26,6 +28,7 @@ interface Props {
 
 export default function ProductClient({ media, ctaText, checklist }: Props) {
     const [selectedMedia, setSelectedMedia] = useState<Media>(media[0]);
+    const [isPlayVideo, setPlayVideo] = useState<boolean>(false);
 
     const scrollRef = useRef<HTMLDivElement | null>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -49,22 +52,49 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
         setIsDragging(false);
     };
 
-    return (
-        <div className="sidebar flex flex-col flex-1/3 sticky w-[25rem] top-0">
-            <div className="video-trailer flex flex-col shadow-2xl rounded-2xl overflow-clip gap-4">
+    const beforeStyle = {
+        content: "",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: "red"
 
+    }
+
+    return (
+        <div className="sidebar flex flex-col flex-1/3 w-fit gap-4">
+            <div className="video-trailer flex flex-col shadow-2xl rounded-2xl overflow-clip gap-2 relative">
 
                 {selectedMedia?.resource_type == 'video' ? (
-                    <iframe
-                        className='w-full h-full'
+                    isPlayVideo ? (
+                        <iframe
+                            className='h-full min-h-[250px]'
+                            height={400}
+                            src={`https://www.youtube.com/embed/${selectedMedia?.resource_value}?autoplay=1`}
+                            title="Course Trailer | IELTS Course by Munzereen Shahid"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            allowFullScreen
+                        ></iframe>
+                    ) : (
+                        <div className='relative thumbnail-wrapper' >
+                            <CirclePlay onClick={() => setPlayVideo(true)} size={100} color="#d5b9b9" className='absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] opacity-80 hover:opacity-100 cursor-pointer z-5  text-2xl' />
+                            <Image
+                                className="w-full"
+                                src={selectedMedia?.thumbnail_url || "/fallback.jpg"}
+                                alt="Video thumbnail"
+                                width={400}
+                                height={400}
+                                loading='lazy'
 
-                        src={`https://www.youtube.com/embed/${selectedMedia?.resource_value}`}
-                        title="Course Trailer | IELTS Course by Munzereen Shahid"
-                        frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        referrerPolicy="strict-origin-when-cross-origin"
-                        allowFullScreen
-                    ></iframe>
+                            />
+                        </div>
+                    )
+
+
 
                 ) : <Image
                     className='w-full'
@@ -75,8 +105,7 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
                     loading='lazy'
                 />}
 
-                <div className="image-gallery flex gap-4 items-center overflow-x-auto h-[200px] scrollbar-hide cursor-grab active:cursor-grabbing"
-
+                <div className="image-gallery flex gap-2 items-center overflow-x-auto h-[105px] scrollbar-hide cursor-grab active:cursor-grabbing"
                     ref={scrollRef}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
@@ -94,27 +123,35 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
                                 width={100}
                                 height={100}
                                 key={id}
-                                onClick={() => setSelectedMedia(x)}
+                                onClick={() => { setSelectedMedia(x), setPlayVideo(false) }}
                             />
                         ) : null
 
                     ))}
                 </div>
-                <span className="price text-3xl font-bold p-4">৳1,000</span>
-                <button className="cta bg-green-600 text-white p-4">{ctaText}</button>
+                <div className="amount-wrapper flex justify-between items-center text-t">
+                    <span className="price text-3xl font-bold px-4 py-2"> <span className='text-sm'>৳</span> 1,000.00</span>
+                    <span className="price  px-4 py-2 line-through"> <span className='text-sm'>৳</span> 3,500.00</span>
+                </div>
+                <button className="cta bg-green-600 text-white p-4 m-4 rounded-lg hover:shadow-lg active:scale-[.95]">{ctaText} in Course</button>
+                <a href="#" className='flex gap-1.5 p-4 max-sm:flex-col'>
+                    <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" className='flex flex-1/4' width={100} height={100} />
+                    (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
+                </a>
             </div>
-
-            <span className="title mt-6">এই কোর্সে যা থাকছে</span>
-            <div className="check-list flex flex-col gap-2">
-                {checklist.map((check, index) =>
-                    check.list_page_visibility ? (
-                        <div className="single-check flex gap-2" key={check.id || index} style={{ color: check.color }}>
-                            <Image src={check.icon} alt={check.text} width={24} height={24} loading='lazy' />
-                            <span className="text">{check.text}</span>
-                        </div>
-                    ) : null
-                )}
-            </div>
-        </div>
+            <Card className='flex flex-col p-4 shadow-2xl z-10'>
+                <span className="title font-black">এই কোর্সে যা থাকছে</span>
+                <div className="check-list flex flex-col gap-2">
+                    {checklist.map((check, index) =>
+                        check.list_page_visibility ? (
+                            <div className="single-check flex gap-2" key={check.id || index}>
+                                <Image src={check.icon} alt={check.text} width={24} height={24} loading='lazy' />
+                                <span className="text">{check.text}</span>
+                            </div>
+                        ) : null
+                    )}
+                </div>
+            </Card>
+        </div >
     );
 }
