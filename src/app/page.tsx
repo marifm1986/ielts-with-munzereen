@@ -91,7 +91,7 @@ export default async function Product() {
           <div className="hero-section flex flex-col gap-4 p-4 ">
             <h1 className="text-[21px] font-bold md:text-4xl text-purple-800">{typedProductData.title}</h1>
             <a href="#" className='flex gap-1.5 font-black max-sm:flex-col'>
-              <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
+              <Image className="max-h-[24px]" src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" width={100} height={100} />
               (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
             </a>
             <div dangerouslySetInnerHTML={{ __html: typedProductData.description }} />

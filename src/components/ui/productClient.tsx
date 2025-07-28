@@ -123,8 +123,8 @@ export default function ProductClient({ media, ctaText, checklist }: Props) {
                     <span className="price  px-4 py-2 line-through"> <span className='text-md'>৳</span> 3,500.00</span>
                 </div>
                 <Button className="cta bg-purple-800 m-4 rounded-lg hover:shadow-lg active:scale-[.95]">{ctaText} in Course</Button>
-                <a href="#" className='flex gap-1.5 p-4 max-sm:flex-col'>
-                    <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" className='flex flex-1/4' width={100} height={100} />
+                <a href="#" className='flex gap-1.5 p-4 max-2xl:flex-col'>
+                    <Image src="https://cdn.10minuteschool.com/images/Dev_Handoff_Q1_24_Frame_2_1725444418666.png" loading='lazy' alt="Rating badge" className='flex flex-1/4 max-h-[24px]' width={100} height={100} />
                     (82.6% শিক্ষার্থী কোর্স শেষে ৫ রেটিং দিয়েছেন)
                 </a>
             </div>
